@@ -1,0 +1,33 @@
+---
+  - name: ruby dependencies
+    apt: name={{item}} state=latest update_cache=yes
+    with_items:
+      - python-software-properties
+
+  - name: update apt
+    apt: update_cache=yes
+
+  - name: brightbox ruby repo
+    apt_repository: repo=ppa:brightbox/ruby-ng
+
+  - name: install ruby packages
+    apt: name={{item}} state=latest update_cache=yes
+    with_items:
+      - ruby
+      - rubygems
+      - ruby-switch
+      - "{{ruby_version}}"
+      - "{{ruby_version}}-dev"
+
+  - name: switch to {{ruby_version}}
+    shell: ruby-switch --set {{ruby_version}}
+
+  - name: quick ugly fix for https://github.com/bundler/bundler/issues/2343
+    file: path=/var/lib/gems/2.0.0/build_info owner=root group=root mode=0777 state=directory
+    when: ruby_version == "ruby2.0"
+
+  - name: install bundler
+    remote_user: vagrant 
+    sudo: yes
+    shell: "{{ruby_version}} -S gem install bundler"
+
