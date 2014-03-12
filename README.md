@@ -11,7 +11,7 @@ None
 Role Variables
 --------------
 
-ruby_version: default(ruby2.0) - used in apt-get after brightbox repos are added
+ruby_version: ruby2.0 - used in apt-get after brightbox repos are added
 
 Dependencies
 ------------
